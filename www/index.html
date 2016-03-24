@@ -19,7 +19,9 @@
                 <!--Premiere page -->
             <div data-role="page" data-theme="b" id="pageAjout" data-transition="turn">
                <div data-theme="b" data-role="header">
-                    <h3>Ajouter</h3>
+                     <a href="#" class="ui-btn ui-icon-home ui-btn-icon-left">Accueil</a>
+                      <h1>Ajouter</h1>
+                    <a href="#pageAffichage" class="ui-btn ui-icon-search ui-btn-icon-left">Listes</a>
                 </div>
                 <div data-role="content" data-theme="b">
                     <input type="text" id="Nom" name="Nom" placeholder="Nom" />
@@ -28,7 +30,6 @@
                     <input type="text" id="Identifiant" name="Identifiant" placeholder="Votre identifiant" />
                     <input type="password"  id="Password" name="Password" placeholder="Mot de passe" name="password"  value="" autocomplete="off">
                     <button id="btnAddUser" class="ui-btn">Ajouter</button>
-                    <a href="#pageAffichage">Afficher La liste</a>
                 </div>
                 <div data-theme="a" data-role="footer" data-position="fixed">
                 </div>
@@ -36,7 +37,7 @@
 
             <div data-role="page" data-dialog="true" id="pageAffichage">
               <div data-role="main" class="ui-content">
-                <table>
+                <table data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow" id="myTable">
                     <thead>
                         <th>Nom</th>
                         <th>Prenom</th>

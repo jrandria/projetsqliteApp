@@ -26,7 +26,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
     //On ajoute un événement click sur notre button ajout//
     $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
 
-        insererUnUtilisateur();
+    
         //On récupère les éléments input
             var nom_user=$("#Nom").val();
             var prenom_user=$("#Prenom").val();

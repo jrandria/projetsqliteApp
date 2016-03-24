@@ -3,11 +3,13 @@ document.addEventListener("deviceready", onDeviceReady, false);
  function onDeviceReady() {
 
     //alert("Cordova est bien chargé").
+
     //Création et Ouverture de la base des données
  
  	var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
- 	var stmt_create_table='CREATE TABLE IF NOT EXISTS tbl_user(id INTEGER PRIMARY KEY,identifiant TEXT,password TEXT,nom TEXT, prenom text,age INTEGER)';
 
+ 	//création d'une table avec une transaction
+    var stmt_create_table='CREATE TABLE IF NOT EXISTS tbl_user(id INTEGER PRIMARY KEY,identifiant TEXT,password TEXT,nom TEXT, prenom text,age INTEGER)';
  	myDB.transaction(
         function(transaction) 
         {
@@ -19,8 +21,12 @@ document.addEventListener("deviceready", onDeviceReady, false);
     			alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
     		})
 	    });
+    //---------Fin transation creation de la table-----//
 
+    //On ajoute un événement click sur notre button ajout//
     $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
+
+    
         //On récupère les éléments input
             var nom_user=$("#Nom").val();
             var prenom_user=$("#Prenom").val();
@@ -48,7 +54,6 @@ document.addEventListener("deviceready", onDeviceReady, false);
     });
 
     //------------Fin onCLick-------------//
-
 
     myDB.transaction(
         function(transaction) {
