@@ -20,37 +20,12 @@ document.addEventListener("deviceready", onDeviceReady, false);
     		function(error) {
     			alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
     		})
-	    });
+	});
     //---------Fin transation creation de la table-----//
 
     //On ajoute un événement click sur notre button ajout//
     $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
-
-    
-        //On récupère les éléments input
-            var nom_user=$("#Nom").val();
-            var prenom_user=$("#Prenom").val();
-            var age_user=$("#Age").val();
-            var identifiant_user=$("#Identifiant").val();
-            var password_user=$("#Password").val();
-
-            alert("Nom"+nom_user);
-
-            var insert_stmt="INSERT INTO tbl_user (identifiant, password, nom, prenom, age) VALUES (?,?,?,?,?)";
-        //On ajoute dans la table avec une transaction
-            myDB.transaction(
-            function(transaction) 
-            {
-              transaction.executeSql(""+insert_stmt, 
-                [identifiant_user,password_user, nom_user, prenom_user, age_user], 
-              function(tx,result){
-                        alert("Utilisateur ajouté...");    
-              }, 
-              function(err){
-                        alert("Erreur de l'insertion des données");
-               })
-            });
-        //---------------------//
+        insertUtilisateur();//Appel de la fonction insertUtilisateur
     });
 
     //------------Fin onCLick-------------//
@@ -62,6 +37,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
         function(){
             //Appel d'une fonction que je crée en dehors de onDeviceReady
             afficheListeUtilisateur();
+            //Désactiver le bouton une fois cliqué pour que la table n'est appelé plusieurs fois
+            //$("#btnChargerTbl").attr('disabled', 'disabled');
+            $('#btnChargerTbl').prop('disabled', true);
     });
 
 
@@ -69,10 +47,41 @@ document.addEventListener("deviceready", onDeviceReady, false);
 };
 //-------------Fin OnDeviceReady----------//
 
+//Fonction insertion des utilisateurs
+function insertUtilisateur()
+{
+    //Il faut réouvrir la base dans chaque fonction
+    var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
+    //On récupère les éléments input
+        var nom_user=$("#Nom").val();
+        var prenom_user=$("#Prenom").val();
+        var age_user=$("#Age").val();
+        var identifiant_user=$("#Identifiant").val();
+        var password_user=$("#Password").val();
+
+        alert("Nom"+nom_user);
+
+        var insert_stmt="INSERT INTO tbl_user (identifiant, password, nom, prenom, age) VALUES (?,?,?,?,?)";
+        //On ajoute dans la table avec une transaction
+        myDB.transaction(
+            function(transaction) 
+            {
+              transaction.executeSql(""+insert_stmt, 
+                [identifiant_user,password_user, nom_user, prenom_user, age_user], 
+              function(tx,result){
+                        alert("Utilisateur ajouté...");    
+              }, 
+              function(err){
+                        alert("Erreur de l'insertion des données");
+               })
+        });
+}
+
 //Fonction pour afficher la liste des utilisateurs
 function afficheListeUtilisateur()
 {
-    alert("Appel de la fonction afficheListeUtilisateur");
+       alert("Appel de la fonction afficheListeUtilisateur");
+       //Il faut réouvrir la base dans chaque fonction
         var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 	    myDB.transaction(
         function(transaction) {
@@ -83,8 +92,8 @@ function afficheListeUtilisateur()
                 {
                     for(var i = 0; i < res.rows.length; i++)
                     {
-                        $( "#tbodyID" ).empty();
-                        $("#tbodyID").append("<tr><td>"+res.rows.item(i).nom+"</td><td>"+res.rows.item(i).prenom+"</td><td>"+res.rows.item(i).age+"</td></tr>");
+                        // $( "#tbodyID" ).empty();
+                        $("#tbodyID").append("<tr><td>"+res.rows.item(i).nom+"</td><td>"+res.rows.item(i).prenom+"</td><td>"+res.rows.item(i).age+"</td><td>"+res.rows.item(i).identifiant+"</td></tr>");
 
                     }
                 },
