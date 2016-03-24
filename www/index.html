@@ -36,8 +36,12 @@
             </div>
 
             <div data-role="page" data-dialog="true" id="pageAffichage">
+                <div data-theme="b" data-role="header">
+                     <a href="#pageAjout" class="ui-btn ui-icon-home ui-btn-icon-left">Ajouter</a>
+                      <h1>Ma liste d'utilisateur</h1>
+                </div>
               <div data-role="main" class="ui-content">
-                <table data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow" id="myTable">
+                <table data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow" id="maTable">
                     <thead>
                         <th>Nom</th>
                         <th>Prenom</th>
@@ -47,7 +51,7 @@
                         
                     </tbody>
                 </table>
-                <a href="#pageAjout">Allez vers page ajout</a>
+               <button id="btnChargerTbl" class="ui-btn">Charger</button>
               </div>
             </div>
 

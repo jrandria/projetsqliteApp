@@ -55,7 +55,24 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
     //------------Fin onCLick-------------//
 
-    myDB.transaction(
+
+    afficheListeUtilisateur();
+
+    $("#btnChargerTbl").on("click",
+        function(){
+            //Appel d'une fonction que je crée en dehors de onDeviceReady
+            afficheListeUtilisateur();
+    });
+
+
+
+};
+//-------------Fin OnDeviceReady----------//
+
+//Fonction pour afficher la liste des utilisateurs
+function afficheListeUtilisateur()
+{
+	    myDB.transaction(
         function(transaction) {
 
             var sqlStmtSelect="SELECT * FROM tbl_user";
@@ -75,33 +92,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
             );
     });
     //------------Fin select-------------//
-
-
-};
-//-------------Fin OnDeviceReady----------//
-
-//Fonction pour afficher la liste des utilisateurs
-
-// function afficheListeUtilisateur()
-// {
-// 	db.transaction(function(tx) {
-// 		var sqlStmtSelect="SELECT * FROM tbl_user";
-//         tx.executeSql(sqlStmtSelect, [], 
-//         	function(tx,res)
-//         	{
-// 	            for(var i = 0; i < res.rows.length; i++)
-// 	            {
-
-// 	            	$("#idTbody").append("<tr><td>"+res.rows.item(i).nom+"</td><td>"+res.rows.item(i).prenom+"</td><td>"+res.rows.item(i).age+"</td><td>"+res.rows.item(i).identifiant+"</td><td>"+res.rows.item(i).password+"</td><td></tr>");
-// 	                //document.getElementById("data-list").innerHTML = document.getElementById("data-list").innerHTML + "<li><a href='javascript:displayNote(\"" + res.rows.item(iii).name + "\")'>" + res.rows.item(iii).name + "</a></li>";
-// 	            }
-//         	},
-//         	function(err)
-//         	{
-// 		        alert("La base n'existe pas encore");
-// 		    });
-//     });
-// }
+}
 
 
 
