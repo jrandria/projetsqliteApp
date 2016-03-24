@@ -5,53 +5,59 @@ document.addEventListener("deviceready", onDeviceReady, false);
     //alert("Cordova est bien chargé").
 
     //Création et Ouverture de la base des données
- 
  	var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 
- 	//création d'une table avec une transaction
-    var stmt_create_table='CREATE TABLE IF NOT EXISTS tbl_user(id INTEGER PRIMARY KEY,identifiant TEXT,password TEXT,nom TEXT, prenom text,age INTEGER)';
- 	myDB.transaction(
-        function(transaction) 
-        {
-            transaction.executeSql(stmt_create_table, [],
-    		function(tx, result) {
-    			alert("Table crée avec succès");
-    		},
-    		function(error) {
-    			alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
-    		})
-	});
-    //---------Fin transation creation de la table-----//
+    //Appel de la fonction pour ajouter des Events click sur les boutons
+    ajouterEventClick(myDB);
 
-    //On ajoute un événement click sur notre button ajout//
+    //Appel de la fonction transation creation de la table-----//
+    chargerLaTable(myDB);
+
+    //Appel de la fonction de affchage des élements dans Table
+    afficheListeUtilisateur(myDB);
+
+};
+//-------------Fin OnDeviceReady----------//
+
+function ajouterEventClick(myDB){
     $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
-        insertUtilisateur();//Appel de la fonction insertUtilisateur
+        insertUtilisateur(myDB);//Appel de la fonction insertUtilisateur
     });
-
-    //------------Fin onCLick-------------//
-
-
-    afficheListeUtilisateur();
 
     $("#btnChargerTbl").on("click",
         function(){
             //Appel d'une fonction que je crée en dehors de onDeviceReady
-            afficheListeUtilisateur();
+            afficheListeUtilisateur(myDB);
             //Désactiver le bouton une fois cliqué pour que la table n'est appelé plusieurs fois
             //$("#btnChargerTbl").attr('disabled', 'disabled');
             $('#btnChargerTbl').prop('disabled', true);
     });
 
 
+}
 
-};
-//-------------Fin OnDeviceReady----------//
+function chargerLaTable(myDB)
+{
+
+    //création d'une table avec une transaction
+    var stmt_create_table='CREATE TABLE IF NOT EXISTS tbl_user(id INTEGER PRIMARY KEY,identifiant TEXT,password TEXT,nom TEXT, prenom text,age INTEGER)';
+    myDB.transaction(
+        function(transaction) 
+        {
+            transaction.executeSql(stmt_create_table, [],
+            function(tx, result) {
+                alert("Table crée avec succès");
+            },
+            function(error) {
+                alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
+            })
+    });
+}
 
 //Fonction insertion des utilisateurs
-function insertUtilisateur()
+function insertUtilisateur(myDB)
 {
-    //Il faut réouvrir la base dans chaque fonction
-    var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
+    
     //On récupère les éléments input
         var nom_user=$("#Nom").val();
         var prenom_user=$("#Prenom").val();
@@ -78,11 +84,9 @@ function insertUtilisateur()
 }
 
 //Fonction pour afficher la liste des utilisateurs
-function afficheListeUtilisateur()
+function afficheListeUtilisateur(myDB)
 {
        alert("Appel de la fonction afficheListeUtilisateur");
-       //Il faut réouvrir la base dans chaque fonction
-        var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 	    myDB.transaction(
         function(transaction) {
 
