@@ -72,6 +72,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
 //Fonction pour afficher la liste des utilisateurs
 function afficheListeUtilisateur()
 {
+    alert("Appel de la fonction afficheListeUtilisateur");
+        var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 	    myDB.transaction(
         function(transaction) {
 
@@ -81,6 +83,7 @@ function afficheListeUtilisateur()
                 {
                     for(var i = 0; i < res.rows.length; i++)
                     {
+                        $( "#tbodyID" ).empty();
                         $("#tbodyID").append("<tr><td>"+res.rows.item(i).nom+"</td><td>"+res.rows.item(i).prenom+"</td><td>"+res.rows.item(i).age+"</td></tr>");
 
                     }
@@ -90,7 +93,7 @@ function afficheListeUtilisateur()
                      alert("La base n'existe pas encore");
                 }
             );
-    });
+        });
     //------------Fin select-------------//
 }
 
