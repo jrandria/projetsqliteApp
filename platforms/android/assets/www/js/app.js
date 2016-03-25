@@ -5,75 +5,118 @@ document.addEventListener("deviceready", onDeviceReady, false);
     //alert("Cordova est bien chargé").
 
     //Création et Ouverture de la base des données
- 
  	var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 
- 	//création d'une table avec une transaction
+    //Appel de la fonction pour ajouter des Events click sur les boutons
+    ajouterEventClick(myDB);
+
+    //Appel de la fonction transation creation de la table-----//
+    chargerLaTable(myDB);
+
+    //Appel de la fonction de affchage des élements dans Table
+   afficheListeUtilisateur(myDB);
+
+};
+//-------------Fin OnDeviceReady----------//
+
+function ajouterEventClick(myDB){
+    $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
+        insertUtilisateur(myDB);//Appel de la fonction insertUtilisateur
+    });
+
+    $("#btnChargerTbl").on("click",
+        function(){
+            //Appel d'une fonction que je crée en dehors de onDeviceReady
+            afficheListeUtilisateur(myDB);
+            //Désactiver le bouton une fois cliqué pour que la table n'est appelé plusieurs fois
+            //$("#btnChargerTbl").attr('disabled', 'disabled');
+            // $('#btnChargerTbl').prop('disabled', true);
+    });
+
+
+}
+
+function chargerLaTable(myDB)
+{
+
+    //création d'une table avec une transaction
     var stmt_create_table='CREATE TABLE IF NOT EXISTS tbl_user(id INTEGER PRIMARY KEY,identifiant TEXT,password TEXT,nom TEXT, prenom text,age INTEGER)';
- 	myDB.transaction(
+    myDB.transaction(
         function(transaction) 
         {
             transaction.executeSql(stmt_create_table, [],
-    		function(tx, result) {
-    			alert("Table crée avec succès");
-    		},
-    		function(error) {
-    			alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
-    		})
-	    });
-    //---------Fin transation creation de la table-----//
+            function(tx, result) {
+                alert("Table crée avec succès");
+            },
+            function(error) {
+                alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
+            })
+    });
+}
 
-    //On ajoute un événement click sur notre button ajout//
-    $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
-
+//Fonction insertion des utilisateurs
+function insertUtilisateur(myDB)
+{
     
-        //On récupère les éléments input
-            var nom_user=$("#Nom").val();
-            var prenom_user=$("#Prenom").val();
-            var age_user=$("#Age").val();
-            var identifiant_user=$("#Identifiant").val();
-            var password_user=$("#Password").val();
+    //On récupère les éléments input
+        var nom_user=$("#Nom").val();
+        var prenom_user=$("#Prenom").val();
+        var age_user=$("#Age").val();
+        var identifiant_user=$("#Identifiant").val();
+        var password_user=$("#Password").val();
 
-            alert("Nom"+nom_user);
+        alert("Nom"+nom_user);
 
-            var insert_stmt="INSERT INTO tbl_user (identifiant, password, nom, prenom, age) VALUES (?,?,?,?,?)";
+        var insert_stmt="INSERT INTO tbl_user (identifiant, password, nom, prenom, age) VALUES (?,?,?,?,?)";
         //On ajoute dans la table avec une transaction
-            myDB.transaction(
+        myDB.transaction(
             function(transaction) 
             {
               transaction.executeSql(""+insert_stmt, 
                 [identifiant_user,password_user, nom_user, prenom_user, age_user], 
               function(tx,result){
-                        alert("Utilisateur ajouté...");    
+                        alert("Utilisateur ajouté avec succès...");
+                        //alert("insertId: " + result.insertId );//id du dernier élement ajouté
+                        //alert("rowsAffected: " + result.rowsAffected ); //le nombre de colonne affecté par la requete (1 içi)
+                        //On appel uen fonction qui ne sélection que le dernier élement ajouté dans la table
+                        var lastInsertId=result.rowsAffected;
+                        alert("ID"+lastInsertId);
+                        afficheListeUtilisateurById(myDB,lastInsertId);//deux paramètres 
               }, 
               function(err){
                         alert("Erreur de l'insertion des données");
                })
+        });
+}
+
+//Fonction pour afficher seulement le dernier élément ajouté
+function afficheListeUtilisateurById(myDB,lastInsertId){
+
+        alert("id dans la fonction"+lastInsertId);
+
+        myDB.transaction(
+            function(transaction)
+            {
+            var sqlStmtSelectByID="SELECT * FROM tbl_user WHERE id="+lastInsertId;
+            transaction.executeSql(""+sqlStmtSelectByID,[],
+                function(tx,res)
+                {
+                   $("#tbodyID").append("<tr><td>"+res.rows.item(0).nom+"</td><td>"+res.rows.item(0).prenom+"</td><td>"+res.rows.item(0).age+"</td><td>"+res.rows.item(0).identifiant+"</td></tr>");
+
+                },
+                function(err)
+                {
+
+                });
+
             });
-        //---------------------//
-    });
 
-    //------------Fin onCLick-------------//
-
-
-    afficheListeUtilisateur();
-
-    $("#btnChargerTbl").on("click",
-        function(){
-            //Appel d'une fonction que je crée en dehors de onDeviceReady
-            afficheListeUtilisateur();
-    });
-
-
-
-};
-//-------------Fin OnDeviceReady----------//
+}
 
 //Fonction pour afficher la liste des utilisateurs
-function afficheListeUtilisateur()
+function afficheListeUtilisateur(myDB)
 {
-    alert("Appel de la fonction afficheListeUtilisateur");
-        var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
+       alert("Appel de la fonction afficheListeUtilisateur");
 	    myDB.transaction(
         function(transaction) {
 
@@ -83,8 +126,8 @@ function afficheListeUtilisateur()
                 {
                     for(var i = 0; i < res.rows.length; i++)
                     {
-                        $( "#tbodyID" ).empty();
-                        $("#tbodyID").append("<tr><td>"+res.rows.item(i).nom+"</td><td>"+res.rows.item(i).prenom+"</td><td>"+res.rows.item(i).age+"</td></tr>");
+                        // $( "#tbodyID" ).empty();
+                        $("#tbodyID").append("<tr><td>"+res.rows.item(i).nom+"</td><td>"+res.rows.item(i).prenom+"</td><td>"+res.rows.item(i).age+"</td><td>"+res.rows.item(i).identifiant+"</td></tr>");
 
                     }
                 },

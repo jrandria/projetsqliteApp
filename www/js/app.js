@@ -14,7 +14,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
     chargerLaTable(myDB);
 
     //Appel de la fonction de affchage des élements dans Table
-    afficheListeUtilisateur(myDB);
+   afficheListeUtilisateur(myDB);
 
 };
 //-------------Fin OnDeviceReady----------//
@@ -30,7 +30,7 @@ function ajouterEventClick(myDB){
             afficheListeUtilisateur(myDB);
             //Désactiver le bouton une fois cliqué pour que la table n'est appelé plusieurs fois
             //$("#btnChargerTbl").attr('disabled', 'disabled');
-            $('#btnChargerTbl').prop('disabled', true);
+            // $('#btnChargerTbl').prop('disabled', true);
     });
 
 
@@ -75,12 +75,39 @@ function insertUtilisateur(myDB)
               transaction.executeSql(""+insert_stmt, 
                 [identifiant_user,password_user, nom_user, prenom_user, age_user], 
               function(tx,result){
-                        alert("Utilisateur ajouté...");    
+                        alert("Utilisateur ajouté avec succès...");
+                        //alert("insertId: " + result.insertId );//id du dernier élement ajouté
+                        //alert("rowsAffected: " + result.rowsAffected ); //le nombre de colonne affecté par la requete (1 içi)
+                        //On appel uen fonction qui ne sélection que le dernier élement ajouté dans la table
+                        var lastInsertId=result.insertId;
+                        afficheListeUtilisateurById(myDB,lastInsertId);//deux paramètres 
               }, 
               function(err){
                         alert("Erreur de l'insertion des données");
                })
         });
+}
+
+//Fonction pour afficher seulement le dernier élément ajouté
+function afficheListeUtilisateurById(myDB,lastInsertId){
+
+        myDB.transaction(
+            function(transaction)
+            {
+            var sqlStmtSelectByID="SELECT * FROM tbl_user WHERE id="+lastInsertId;
+            transaction.executeSql(""+sqlStmtSelectByID,[],
+                function(tx,res)
+                {
+                   $("#tbodyID").append("<tr><td>"+res.rows.item(0).nom+"</td><td>"+res.rows.item(0).prenom+"</td><td>"+res.rows.item(0).age+"</td><td>"+res.rows.item(0).identifiant+"</td></tr>");
+
+                },
+                function(err)
+                {
+                    alert("erreurs dans la selection by ID");
+                });
+
+            });
+
 }
 
 //Fonction pour afficher la liste des utilisateurs
