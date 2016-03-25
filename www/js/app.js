@@ -7,6 +7,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
     //Création et Ouverture de la base des données
  	var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 
+    //Appel à une fonction qui center tous les élements de la page
+    centrerLeselementsDelaPageConnexion();
     //Appel de la fonction pour ajouter des Events click sur les boutons
     ajouterEventClick(myDB);
 
@@ -18,6 +20,13 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 };
 //-------------Fin OnDeviceReady----------//
+//
+function centrerLeselementsDelaPageConnexion()
+{
+    $('#pageAjout').live('pageshow',function(e,data){    
+      $('#index-content').css('margin-top',($(window).height() - $('[data-role=header]').height() - $('[data-role=footer]').height() - $('#index-content').outerHeight())/2);
+    });
+}
 
 function ajouterEventClick(myDB){
     $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});

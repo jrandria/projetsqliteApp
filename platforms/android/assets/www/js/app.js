@@ -7,6 +7,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
     //Création et Ouverture de la base des données
  	var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 
+    //Appel à une fonction qui center tous les élements de la page
+    centrerLeselementsDelaPageConnexion();
     //Appel de la fonction pour ajouter des Events click sur les boutons
     ajouterEventClick(myDB);
 
@@ -18,6 +20,13 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 };
 //-------------Fin OnDeviceReady----------//
+//
+function centrerLeselementsDelaPageConnexion()
+{
+    $('#pageAjout').live('pageshow',function(e,data){    
+      $('#index-content').css('margin-top',($(window).height() - $('[data-role=header]').height() - $('[data-role=footer]').height() - $('#index-content').outerHeight())/2);
+    });
+}
 
 function ajouterEventClick(myDB){
     $("#btnAddUser").on("click",function(){//$("#btnAddUser").click(function(){});
@@ -46,7 +55,7 @@ function chargerLaTable(myDB)
         {
             transaction.executeSql(stmt_create_table, [],
             function(tx, result) {
-                alert("Table crée avec succès");
+                // alert("Table crée avec succès");
             },
             function(error) {
                 alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
@@ -113,7 +122,7 @@ function afficheListeUtilisateurById(myDB,lastInsertId){
 //Fonction pour afficher la liste des utilisateurs
 function afficheListeUtilisateur(myDB)
 {
-       alert("Appel de la fonction afficheListeUtilisateur");
+       // alert("Appel de la fonction afficheListeUtilisateur");
 	    myDB.transaction(
         function(transaction) {
 

@@ -23,18 +23,43 @@
                       <h1>Ajouter</h1>
                     <a href="#pageAffichage" class="ui-btn ui-icon-search ui-btn-icon-left">Listes</a>
                 </div>
-                <div data-role="content" data-theme="b">
-                    <input type="text" id="Nom" name="Nom" placeholder="Nom" />
-                    <input type="text" id="Prenom" name="Prenom" placeholder="Prenom" />
-                    <input type="number" id="Age" name="Age" pattern="[0-9]*"   placeholder="Age">
-                    <input type="text" id="Identifiant" name="Identifiant" placeholder="Votre identifiant" />
-                    <input type="password"  id="Password" name="Password" placeholder="Mot de passe" name="password"  value="" autocomplete="off">
-                    <button id="btnAddUser" class="ui-btn">Ajouter</button>
+                <div data-role="content" data-theme="b" id="index-content">
+                    <div id="monForm">
+                        <input type="text" id="Identifiant" name="Identifiant" placeholder="Votre identifiant" />
+                        <input type="password"  id="Password" name="Password" placeholder="Mot de passe" name="password"  value="" autocomplete="off">
+                        <fieldset class="ui-grid-a">
+                            <div class="ui-block-a">
+                                <button id="btnConnectUser" class="ui-btn">Connexion</button>
+                            </div>
+                            <div class="ui-block-b">
+                                <a href="#myPopup" data-rel="popup" class="ui-btn" data-transition="pop" >Inscription</a>
+                            </div>
+                        </fieldset>                    
+                    </div>
+
+
+                    <!--Création de l'élement Popup qui doit être dans la page qui appel ce popup avec un data_role popup mais pas page -->
+                    <div data-role="popup" id="myPopup" data-overlay-theme="e" data-position-to="window">
+                        <div data-role="header">
+                          <h1>Inscription</h1>
+                        </div>
+                        <div data-role="main" class="ui-content">
+                            <input type="text" id="Nom" name="Nom" placeholder="Nom" />
+                            <input type="text" id="Prenom" name="Prenom" placeholder="Prenom" />
+                            <input type="number" id="Age" name="Age" pattern="[0-9]*"   placeholder="Age">
+                            <input type="text" id="Identifiant" name="Identifiant" placeholder="Votre identifiant" />
+                            <input type="password"  id="Password" name="Password" placeholder="Mot de passe" name="password"  value="" autocomplete="off">
+                            <button id="btnAddUser" class="ui-btn">Ajouter</button>
+                        </div>
+                       <div data-role="footer">
+                       </div>
+                    </div>
                 </div>
-                <div data-theme="a" data-role="footer" data-position="fixed">
+                <div data-role="footer" data-position="fixed">
+                    <h1></h1>
                 </div>
             </div>
-
+            
             <div data-role="page" data-dialog="true" id="pageAffichage">
                 <div data-theme="b" data-role="header">
                      <a href="#pageAjout" class="ui-btn ui-icon-home ui-btn-icon-left">Ajouter</a>
