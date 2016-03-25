@@ -79,8 +79,7 @@ function insertUtilisateur(myDB)
                         //alert("insertId: " + result.insertId );//id du dernier élement ajouté
                         //alert("rowsAffected: " + result.rowsAffected ); //le nombre de colonne affecté par la requete (1 içi)
                         //On appel uen fonction qui ne sélection que le dernier élement ajouté dans la table
-                        var lastInsertId=result.rowsAffected;
-                        alert("ID"+lastInsertId);
+                        var lastInsertId=result.insertId;
                         afficheListeUtilisateurById(myDB,lastInsertId);//deux paramètres 
               }, 
               function(err){
@@ -91,8 +90,6 @@ function insertUtilisateur(myDB)
 
 //Fonction pour afficher seulement le dernier élément ajouté
 function afficheListeUtilisateurById(myDB,lastInsertId){
-
-        alert("id dans la fonction"+lastInsertId);
 
         myDB.transaction(
             function(transaction)
@@ -106,7 +103,7 @@ function afficheListeUtilisateurById(myDB,lastInsertId){
                 },
                 function(err)
                 {
-
+                    alert("erreurs dans la selection by ID");
                 });
 
             });

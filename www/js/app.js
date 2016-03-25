@@ -46,7 +46,7 @@ function chargerLaTable(myDB)
         {
             transaction.executeSql(stmt_create_table, [],
             function(tx, result) {
-                alert("Table crée avec succès");
+                // alert("Table crée avec succès");
             },
             function(error) {
                 alert("Des erreurs rencontrés pendant la création de la table."+ error.message);
@@ -113,7 +113,7 @@ function afficheListeUtilisateurById(myDB,lastInsertId){
 //Fonction pour afficher la liste des utilisateurs
 function afficheListeUtilisateur(myDB)
 {
-       alert("Appel de la fonction afficheListeUtilisateur");
+       // alert("Appel de la fonction afficheListeUtilisateur");
 	    myDB.transaction(
         function(transaction) {
 
