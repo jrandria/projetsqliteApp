@@ -8,7 +8,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
  	var myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db"});
 
     //Appel à une fonction qui center tous les élements de la page
-    centrerLeselementsDelaPageConnexion();
+    // centrerLeselementsDelaPageConnexion();
     //Appel de la fonction pour ajouter des Events click sur les boutons
     ajouterEventClick(myDB);
 
@@ -33,17 +33,22 @@ function ajouterEventClick(myDB){
         insertUtilisateur(myDB);//Appel de la fonction insertUtilisateur
     });
 
-    $("#btnChargerTbl").on("click",
-        function(){
+    $("#btnChargerTbl").on("click",function(){
             //Appel d'une fonction que je crée en dehors de onDeviceReady
-            afficheListeUtilisateur(myDB);
+        afficheListeUtilisateur(myDB);
             //Désactiver le bouton une fois cliqué pour que la table n'est appelé plusieurs fois
             //$("#btnChargerTbl").attr('disabled', 'disabled');
             // $('#btnChargerTbl').prop('disabled', true);
     });
 
+    $("#btnConnectUser").on("click",function(){
+        testConnectionUtilisateur(myDB);
+    });
+
 
 }
+
+
 
 function chargerLaTable(myDB)
 {
@@ -74,7 +79,6 @@ function insertUtilisateur(myDB)
         var identifiant_user=$("#Identifiant").val();
         var password_user=$("#Password").val();
 
-        alert("Nom"+nom_user);
 
         var insert_stmt="INSERT INTO tbl_user (identifiant, password, nom, prenom, age) VALUES (?,?,?,?,?)";
         //On ajoute dans la table avec une transaction
@@ -146,6 +150,33 @@ function afficheListeUtilisateur(myDB)
     //------------Fin select-------------//
 }
 
+
+function testConnectionUtilisateur(myDB){
+    //On récupère les éléments input
+        var identifiant_passe=$("#IdentifiantUser").val();
+        var password_passe=$("#PasswordUser").val();
+
+        alert("Identifiant: "+identifiant_passe+" /n Password: "+password_passe);
+
+        var selectbyidentifiant_stmt="SELECT identifiant,password FROM tbl_user WHERE identifiant=? AND password=?" 
+        myDB.transaction(
+            function(transaction) 
+            {
+              transaction.executeSql(""+selectbyidentifiant_stmt, [identifiant_passe,password_passe], 
+              function(tx,result){
+                alert("Length"+result.rows.length);
+                if (result.rows.length>0) {
+                    alert("Cet utilisateur est bien enregistré");
+                }else{
+                    alert("Il s'agit d'un utilisateur non enregistré");
+                }
+              }, 
+              function(err){
+                        alert("Erreur de l'insertion des données");
+               })
+        });
+
+}
 
 
 // //Fonction pour ajouter un utilisateur
